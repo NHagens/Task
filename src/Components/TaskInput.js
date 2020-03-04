@@ -3,11 +3,11 @@ import React from "react";
 function getDateTime(extraHours = 0) {
     let today = new Date();
     let year = today.getFullYear();
-    let month = today.getMonth();
-    let date = today.getDate();
+    let month = ('0' + today.getMonth()).slice(-2);
+    let date = ('0' + today.getDate()).slice(-2);
 
-    let hours = today.getHours() + extraHours;
-    let minutes = today.getMinutes();
+    let hours = ('0' + (today.getHours() + extraHours)).slice(-2);
+    let minutes = ('0' + today.getMinutes()).slice(-2);
 
     return `${year}-${month}-${date}T${hours}:${minutes}`;
 }
