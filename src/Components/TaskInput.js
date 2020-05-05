@@ -12,19 +12,11 @@ function getDateTime(extraHours = 0) {
     return `${year}-${month}-${date}T${hours}:${minutes}`;
 }
 
-const myInit = {
-    method: 'POST',
-    headers: {
-        'Content-Type': 'application/json'
-    },
-    mode: 'cors',
-    cache: 'default'
-};
-
 export class TaskInput extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {name: '',
+        this.state = {
+            name: '',
             description: '',
             startTime: getDateTime(),
             endTime: getDateTime(1),
@@ -42,7 +34,7 @@ export class TaskInput extends React.Component {
     }
 
     handleSubmit(event) {
-        window.fetch(`http://localhost:8080/task/new`, {
+        fetch(`http://localhost:8080/task/new`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
