@@ -13,7 +13,7 @@ function getDateTime(extraHours = 0) {
 }
 
 const myInit = {
-    method: 'GET',
+    method: 'POST',
     headers: {
         'Content-Type': 'application/json'
     },
@@ -27,7 +27,9 @@ export class TaskInput extends React.Component {
         this.state = {name: '',
             description: '',
             startTime: getDateTime(),
-            endTime: getDateTime(1)};
+            endTime: getDateTime(1),
+            saveSuccess: "none",
+        };
 
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -40,10 +42,18 @@ export class TaskInput extends React.Component {
     }
 
     handleSubmit(event) {
-        window.fetch(`http://localhost:8080/task/new?name=${this.state.name}&description=${this.state.description}&startTime=${this.state.startTime}&endTime=${this.state.endTime}`, myInit)
-            .then(res => {
-                res.json().then(r => alert(JSON.stringify(r)));
-            })
+        window.fetch(`http://localhost:8080/task/new`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(this.state)
+        })
+            .then(response => response.json())
+            .then (data => {
+                let result = data.entity;
+                this.setState({saveSuccess: result})
+            });
         event.preventDefault();
     }
 
