@@ -45,7 +45,8 @@ class TaskInput extends React.Component {
         return `${year}-${month}-${date}T${hours}:${minutes}`;
     }
 
-    handleChange(event) {
+    handleChange (event, valueX) {
+        event.persist();
         const name = event.target.name;
         const value = event.target.value;
         this.setState({[name]: value});
@@ -75,17 +76,19 @@ class TaskInput extends React.Component {
                 <Grid className={classes.form} item xs={5}>
                     <Card className={classes.root}>
                         <h1>New task</h1>
+                        <form>
                         <div className={classes.section}>
-                            <TextField className={classes.section} id="TaskName" label="Name" onChange={this.handleChange} /><br/>
-                            <TextField className={classes.section} id="TaskDescription" label="Description" fullWidth multiline rows={4} variant="outlined" onChange={this.handleChange} />
+                            <TextField className={classes.section} name="name" id="TaskName" label="Name" defaultValue={this.state.name} onChange={this.handleChange} /><br/>
+                            <TextField className={classes.section} name="description" id="TaskDescription" label="Description" fullWidth multiline rows={4} variant="outlined" defaultValue={this.state.description} onChange={this.handleChange} />
                         </div>
 
                         <div className={classes.section}>
-                            <TextField className={classes.section} id="StartTime" label="Start time" type="datetime-local" defaultValue={this.state.startTime} onChange={this.handleChange}/>
-                            <TextField className={classes.section} id="EndTime" label="End time" type="datetime-local" defaultValue={this.state.endTime} onChange={this.handleChange}/> <br/>
+                            <TextField className={classes.section} name="startTime" id="StartTime" label="Start time" type="datetime-local" defaultValue={this.state.startTime} onChange={this.handleChange}/>
+                            <TextField className={classes.section} name="endTime" id="EndTime" label="End time" type="datetime-local" defaultValue={this.state.endTime} onChange={this.handleChange}/> <br/>
                         </div>
 
                         <Button className={classes.section} onClick={this.handleSubmit} color="primary" variant="contained">Save</Button>
+                        </form>
                     </Card>
                 </Grid>
             </Grid>
