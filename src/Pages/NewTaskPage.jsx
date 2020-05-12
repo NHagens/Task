@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import {TaskInput} from "../Components/TaskInput";
+import TaskInput from "../Components/TaskInput";
 
 class NewTaskPage extends Component {
     render() {

@@ -1,30 +1,48 @@
 import React from "react";
+import Grid from "@material-ui/core/Grid";
+import Card from "@material-ui/core/Card";
+import withStyles from "@material-ui/core/styles/withStyles";
+import TextField from "@material-ui/core/TextField";
+import Button from "@material-ui/core/Button";
 
-function getDateTime(extraHours = 0) {
-    let today = new Date();
-    let year = today.getFullYear();
-    let month = ('0' + today.getMonth()).slice(-2);
-    let date = ('0' + today.getDate()).slice(-2);
+const useStyles = theme => ({
+    root: {
+        margin: "16px",
+        padding: "16px",
+    },
+    section: {
+        margin: "8px"
+    },
+    form: {
+        margin: "auto"
+    }
+});
 
-    let hours = ('0' + (today.getHours() + extraHours)).slice(-2);
-    let minutes = ('0' + today.getMinutes()).slice(-2);
-
-    return `${year}-${month}-${date}T${hours}:${minutes}`;
-}
-
-export class TaskInput extends React.Component {
+class TaskInput extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             name: '',
             description: '',
-            startTime: getDateTime(),
-            endTime: getDateTime(1),
+            startTime: this.getDateTime(),
+            endTime: this.getDateTime(1),
             saveSuccess: "none",
         };
 
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+    }
+
+    getDateTime(extraHours = 0) {
+        let today = new Date();
+        let year = today.getFullYear();
+        let month = ('0' + today.getMonth()).slice(-2);
+        let date = ('0' + today.getDate()).slice(-2);
+
+        let hours = ('0' + (today.getHours() + extraHours)).slice(-2);
+        let minutes = ('0' + today.getMinutes()).slice(-2);
+
+        return `${year}-${month}-${date}T${hours}:${minutes}`;
     }
 
     handleChange(event) {
@@ -50,27 +68,30 @@ export class TaskInput extends React.Component {
     }
 
     render() {
+        const {classes} = this.props;
+
         return (
-            <form onSubmit={this.handleSubmit}>
-                <h2>New task</h2>
-                <label>
-                    Name:
-                    <input type="text" name="name" value={this.state.name} onChange={this.handleChange} />
-                </label>
-                <label>
-                    Description:
-                    <input type="text" name="description" value={this.state.description} onChange={this.handleChange} />
-                </label>
-                <label>
-                    Start time:
-                    <input type="datetime-local" name="startTime" value={this.state.startTime} onChange={this.handleChange}/>
-                </label>
-                <label>
-                    End time:
-                    <input type="datetime-local" name="endTime" value={this.state.endTime} onChange={this.handleChange}/>
-                </label>
-                <input type="submit" value="Submit" />
-            </form>
+            <Grid>
+                <Grid className={classes.form} item xs={5}>
+                    <Card className={classes.root}>
+                        <h1>New task</h1>
+                        <div className={classes.section}>
+                            <TextField className={classes.section} id="TaskName" label="Name" onChange={this.handleChange} /><br/>
+                            <TextField className={classes.section} id="TaskDescription" label="Description" fullWidth multiline rows={4} variant="outlined" onChange={this.handleChange} />
+                        </div>
+
+                        <div className={classes.section}>
+                            <TextField className={classes.section} id="StartTime" label="Start time" type="datetime-local" defaultValue={this.state.startTime} onChange={this.handleChange}/>
+                            <TextField className={classes.section} id="EndTime" label="End time" type="datetime-local" defaultValue={this.state.endTime} onChange={this.handleChange}/> <br/>
+                        </div>
+
+                        <Button className={classes.section} onClick={this.handleSubmit} color="primary" variant="contained">Save</Button>
+                    </Card>
+                </Grid>
+            </Grid>
+
         );
     }
 }
+
+export default withStyles(useStyles)(TaskInput)
