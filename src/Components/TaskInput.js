@@ -36,7 +36,7 @@ class TaskInput extends React.Component {
     getDateTime(extraHours = 0) {
         let today = new Date();
         let year = today.getFullYear();
-        let month = ('0' + today.getMonth()).slice(-2);
+        let month = ('0' + (today.getMonth()+1)).slice(-2);
         let date = ('0' + today.getDate()).slice(-2);
 
         let hours = ('0' + (today.getHours() + extraHours)).slice(-2);
@@ -83,8 +83,8 @@ class TaskInput extends React.Component {
                         </div>
 
                         <div className={classes.section}>
-                            <TextField className={classes.section} name="startTime" id="StartTime" label="Start time" type="datetime-local" defaultValue={this.state.startTime} onChange={this.handleChange}/>
-                            <TextField className={classes.section} name="endTime" id="EndTime" label="End time" type="datetime-local" defaultValue={this.state.endTime} onChange={this.handleChange}/> <br/>
+                            <TextField className={classes.section} name="startTime" id="StartTime" label="Start time" type="datetime-local" defaultValue={this.state.startTime} onChange={this.handleChange}/><br/>
+                            <TextField className={classes.section} name="endTime" id="EndTime" label="End time" type="datetime-local" defaultValue={this.state.endTime} onChange={this.handleChange}/>
                         </div>
 
                         <Button className={classes.section} onClick={this.handleSubmit} color="primary" variant="contained">Save</Button>

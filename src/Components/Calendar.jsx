@@ -55,7 +55,8 @@ class Calendar extends Component {
                                 {task.description}
                             </Typography>
                             <Typography color="textSecondary">
-                                {task.startTime} - {task.endTime}
+                                {task.startTime} <br/>
+                                {task.endTime}
                             </Typography>
                         </Card>
                     </Grid>
