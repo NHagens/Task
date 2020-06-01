@@ -1,33 +1,31 @@
 import React from "react";
+import Grid from "@material-ui/core/Grid";
+import Card from "@material-ui/core/Card";
+import withStyles from "@material-ui/core/styles/withStyles";
+import TextField from "@material-ui/core/TextField";
+import Button from "@material-ui/core/Button";
 
-function getDateTime(extraHours = 0) {
-    let today = new Date();
-    let year = today.getFullYear();
-    let month = ('0' + today.getMonth()).slice(-2);
-    let date = ('0' + today.getDate()).slice(-2);
-
-    let hours = ('0' + (today.getHours() + extraHours)).slice(-2);
-    let minutes = ('0' + today.getMinutes()).slice(-2);
-
-    return `${year}-${month}-${date}T${hours}:${minutes}`;
-}
-
-const myInit = {
-    method: 'POST',
-    headers: {
-        'Content-Type': 'application/json'
+const useStyles = theme => ({
+    root: {
+        margin: "16px",
+        padding: "16px",
     },
-    mode: 'cors',
-    cache: 'default'
-};
+    section: {
+        margin: "8px"
+    },
+    form: {
+        margin: "auto"
+    }
+});
 
-export class TaskInput extends React.Component {
+class TaskInput extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {name: '',
+        this.state = {
+            name: '',
             description: '',
-            startTime: getDateTime(),
-            endTime: getDateTime(1),
+            startTime: this.getDateTime(),
+            endTime: this.getDateTime(1),
             saveSuccess: "none",
         };
 
@@ -35,14 +33,27 @@ export class TaskInput extends React.Component {
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
-    handleChange(event) {
+    getDateTime(extraHours = 0) {
+        let today = new Date();
+        let year = today.getFullYear();
+        let month = ('0' + (today.getMonth()+1)).slice(-2);
+        let date = ('0' + today.getDate()).slice(-2);
+
+        let hours = ('0' + (today.getHours() + extraHours)).slice(-2);
+        let minutes = ('0' + today.getMinutes()).slice(-2);
+
+        return `${year}-${month}-${date}T${hours}:${minutes}`;
+    }
+
+    handleChange (event, valueX) {
+        event.persist();
         const name = event.target.name;
         const value = event.target.value;
         this.setState({[name]: value});
     }
 
     handleSubmit(event) {
-        window.fetch(`http://localhost:8080/task/new`, {
+        fetch(`http://localhost:8080/task/new`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -58,27 +69,32 @@ export class TaskInput extends React.Component {
     }
 
     render() {
+        const {classes} = this.props;
+
         return (
-            <form onSubmit={this.handleSubmit}>
-                <h2>New task</h2>
-                <label>
-                    Name:
-                    <input type="text" name="name" value={this.state.name} onChange={this.handleChange} />
-                </label>
-                <label>
-                    Description:
-                    <input type="text" name="description" value={this.state.description} onChange={this.handleChange} />
-                </label>
-                <label>
-                    Start time:
-                    <input type="datetime-local" name="startTime" value={this.state.startTime} onChange={this.handleChange}/>
-                </label>
-                <label>
-                    End time:
-                    <input type="datetime-local" name="endTime" value={this.state.endTime} onChange={this.handleChange}/>
-                </label>
-                <input type="submit" value="Submit" />
-            </form>
+            <Grid>
+                <Grid className={classes.form} item xs={5}>
+                    <Card className={classes.root}>
+                        <h1>New task</h1>
+                        <form>
+                        <div className={classes.section}>
+                            <TextField className={classes.section} name="name" id="TaskName" label="Name" defaultValue={this.state.name} onChange={this.handleChange} /><br/>
+                            <TextField className={classes.section} name="description" id="TaskDescription" label="Description" fullWidth multiline rows={4} variant="outlined" defaultValue={this.state.description} onChange={this.handleChange} />
+                        </div>
+
+                        <div className={classes.section}>
+                            <TextField className={classes.section} name="startTime" id="StartTime" label="Start time" type="datetime-local" defaultValue={this.state.startTime} onChange={this.handleChange}/><br/>
+                            <TextField className={classes.section} name="endTime" id="EndTime" label="End time" type="datetime-local" defaultValue={this.state.endTime} onChange={this.handleChange}/>
+                        </div>
+
+                        <Button className={classes.section} onClick={this.handleSubmit} color="primary" variant="contained">Save</Button>
+                        </form>
+                    </Card>
+                </Grid>
+            </Grid>
+
         );
     }
 }
+
+export default withStyles(useStyles)(TaskInput)
