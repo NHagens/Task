@@ -32,7 +32,7 @@ class Calendar extends Component {
             .then(data => {
                 console.log(data);
 
-                data.entity.forEach(task => {
+                data.forEach(task => {
                 loadedTasks.push(task);
             });
 
