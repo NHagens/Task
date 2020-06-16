@@ -32,6 +32,8 @@ class TaskInput extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            currentUser: null,
+            id: null,
             name: '',
             description: '',
             startTime: this.getDateTime(),
@@ -47,9 +49,33 @@ class TaskInput extends React.Component {
         this.handleSubmit = this.handleSubmit.bind(this);
         this.removeTag = this.removeTag.bind(this);
         this.addTag = this.addTag.bind(this);
+        this.getRandomTask = this.getRandomTask.bind(this);
     }
 
     componentDidMount() {
+        if (this.props.task !== null) {
+            let task = this.props.task;
+            this.setState({
+                id: task.id,
+                name: task.name,
+                description: task.description,
+                startTime: task.startTime,
+                endTime: task.endTime,
+                tags: task.tags
+            });
+        }
+        fetch(`http://localhost:8080/user/getUser?username=` + localStorage.getItem("user"), {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        })
+            .then(response => response.json())
+            .then (data => {
+                console.log(data);
+                this.setState({currentUser: data});
+            });
+
         fetch(`http://localhost:8080/tag/getAll`, {
             method: 'GET',
             headers: {
@@ -118,14 +144,14 @@ class TaskInput extends React.Component {
         }
 
         let task = JSON.stringify({
+            id: this.state.id,
             name: this.state.name,
             description: this.state.description,
             startTime: this.state.startTime,
             endTime: this.state.endTime,
             tags: this.state.tags,
+            postOwner: this.state.currentUser
         });
-
-        console.log(task);
 
         fetch(`http://localhost:8080/task/new`, {
             method: 'POST',
@@ -136,9 +162,31 @@ class TaskInput extends React.Component {
         })
             .then(response => response.json())
             .then (data => {
-                this.props.history.push("/index");
+                if (this.props.closeHandler != null && this.props.addTask != null)
+                {
+                    this.props.closeHandler();
+                }
+                else {
+                    this.props.history.push("/index");
+                }
             });
         event.preventDefault();
+    }
+
+    getRandomTask() {
+        fetch(`http://localhost:8080/task/createRandom`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        })
+            .then(response => response.json())
+            .then (data => {
+                if (data.length !== 0) {
+                    this.setState({name: data[0].name,
+                        description: data[0].description});
+                }
+            });
     }
 
     render() {
@@ -146,9 +194,9 @@ class TaskInput extends React.Component {
 
         return (
             <Grid>
-                <Grid className={classes.form} item xs={5}>
+                <Grid className={classes.form} item xs={12}>
                     <Card className={classes.root}>
-                        <h1>New task</h1>
+                        <h1>New task</h1> <Button className={classes.section} id="Random" onClick={this.getRandomTask} color="primary" variant="contained">Random task</Button>
                         <form>
                             <Box id="errorField" visibility={this.state.errorVisibility}>
                                 <Alert severity="error">
@@ -156,8 +204,8 @@ class TaskInput extends React.Component {
                                 </Alert>
                             </Box>
                             <div className={classes.section}>
-                                <TextField className={classes.section} name="name" id="TaskName" label="Name" defaultValue={this.state.name} onChange={this.handleChange} /><br/>
-                                <TextField className={classes.section} name="description" id="TaskDescription" label="Description" fullWidth multiline rows={4} variant="outlined" defaultValue={this.state.description} onChange={this.handleChange} />
+                                <TextField className={classes.section} name="name" id="TaskName" label="Name" value={this.state.name} onChange={this.handleChange} /><br/>
+                                <TextField className={classes.section} name="description" id="TaskDescription" label="Description" fullWidth multiline rows={4} variant="outlined" value={this.state.description} onChange={this.handleChange} />
                             </div>
 
                             <div className={classes.section}>

@@ -17,6 +17,9 @@ export default class ButtonAppBar extends Component {
                     <Button href="/newTask" color="inherit">
                         Create Task
                     </Button>
+                    <Button href="login" color="inherit">
+                        Login
+                    </Button>
                     </Toolbar>
             </AppBar>
         );
