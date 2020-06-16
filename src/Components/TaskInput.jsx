@@ -53,8 +53,9 @@ class TaskInput extends React.Component {
     }
 
     componentDidMount() {
-        if (this.props.task !== null) {
+        if (this.props.task != null) {
             let task = this.props.task;
+            console.log(task);
             this.setState({
                 id: task.id,
                 name: task.name,

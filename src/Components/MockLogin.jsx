@@ -36,7 +36,7 @@ class MockLogin extends Component {
                     {this.state.users.map(user => (
                         <Button
                             key={user.id}
-                            id="login"
+                            id={user.name}
                             onClick={ () => this.login(user) }
                             color="primary"
                             variant="contained">
